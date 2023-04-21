@@ -1,0 +1,60 @@
+dataset_name: aic_thumos
+train_split: ['training']
+val_split: ['validation']
+json_files: [./data/aic_2023_SetA1_2model_concat_3view/fold0/AICity2023.json,
+              ./data/aic_2023_SetA1_2model_concat_3view/fold1/AICity2023.json,
+              ./data/aic_2023_SetA1_2model_concat_3view/fold2/AICity2023.json,
+              ./data/aic_2023_SetA1_2model_concat_3view/fold3/AICity2023.json,
+              ./data/aic_2023_SetA1_2model_concat_3view/fold4/AICity2023.json]
+use_concat_view: True
+dataset: {
+  json_file: ./,
+  feat_folder: ./data/thumos/i3d_features,
+  file_prefix: ~,
+  file_ext: .npy,
+  num_classes: 15,
+  input_dim: 8448, # watch out
+  feat_stride: 6, # watch out
+  num_frames: 6, # watch out
+  # serve as data augmentation
+  trunc_thresh: 0.5,
+  crop_ratio: [0.9, 1.0],
+  max_seq_len: 2304,
+  default_fps: 6, # watch out
+}
+model: {
+  fpn_type: identity,
+  max_buffer_len_factor: 6.0,
+  n_mha_win_size: 19,
+}
+opt: {
+  learning_rate: 0.0002,
+  epochs: 120,
+  weight_decay: 0.05,
+}
+loader: {
+  batch_size: 2,
+  num_workers: 8,
+}
+train_cfg: {
+  init_loss_norm: 100,
+  clip_grad_l2norm: 1.0,
+  cls_prior_prob: 0.01,
+  center_sample: radius,
+  center_sample_radius: 1.5,
+}
+test_cfg: {
+  voting_thresh: 0.7,
+  max_seg_num: 200,
+  min_score: 0.3,
+  iou_threshold: 0.3,
+
+  # when using external scores, our model is generating "proposals"
+  # multiclass_nms: False,
+  # ext_score_file: ./data/thumos/annotations/thumos14_cls_scores.pkl,
+  # comment out L47-48 and uncomment L50 to disable score fusion
+  multiclass_nms: True,
+  nms_method: 'soft',
+  pre_nms_topk: 2000,
+}
+output_folder: ./ckpt_26_03/

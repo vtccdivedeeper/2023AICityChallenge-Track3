@@ -1,0 +1,82 @@
+TRAIN:
+  # ENABLE: True # default True
+  DATASET: kinetics
+  BATCH_SIZE: 16
+  EVAL_PERIOD: 2
+  CHECKPOINT_PERIOD: 1
+  AUTO_RESUME: False
+  CHECKPOINT_FILE_PATH: 'x3d_l.pyth'
+  CHECKPOINT_EPOCH_RESET: True
+X3D:
+  WIDTH_FACTOR: 2.0
+  DEPTH_FACTOR: 5.0
+  BOTTLENECK_FACTOR: 2.25
+  DIM_C5: 2048
+  DIM_C1: 12
+TEST:
+  ENABLE: True
+  DATASET: kinetics
+  BATCH_SIZE: 64
+  CHECKPOINT_FILE_PATH: 'x3d_l.pyth' # 77.48% top1 30-view accuracy to download from the model zoo (optional).
+  # NUM_SPATIAL_CROPS: 1
+  NUM_SPATIAL_CROPS: 3
+  EXTRACT_FEATURE: True
+DATA:
+  RANDOM_FLIP: False
+  NUM_FRAMES: 6
+  SAMPLING_RATE: 5
+  STRIDE: 6 # the distance between two consecutive clip, equal to 6 => no overlap 
+  TRAIN_JITTER_SCALES: [512, 640]
+  TRAIN_CROP_SIZE: 448
+  # TEST_CROP_SIZE: 312 # use if TEST.NUM_SPATIAL_CROPS: 1
+  TEST_CROP_SIZE: 448
+  # use if TEST.NUM_SPATIAL_CROPS: 3
+  INPUT_CHANNEL_NUM: [3]
+  DECODING_BACKEND: pyav
+  PATH_TO_DATA_DIR: /workspace/AICity2023/data/SetA2
+  PATH_EXTRACT: /workspace/AICity2023/data/extract_feature_A2_14_03_seperate_fold
+RESNET:
+  ZERO_INIT_FINAL_BN: True
+  TRANS_FUNC: x3d_transform
+  STRIDE_1X1: False
+BN:
+  USE_PRECISE_STATS: True
+  NUM_BATCHES_PRECISE: 200
+  WEIGHT_DECAY: 0.0
+SOLVER:
+  BASE_LR: 0.0005 # 1 machine
+  BASE_LR_SCALE_NUM_SHARDS: True
+  MAX_EPOCH: 32
+  LR_POLICY: cosine
+  WEIGHT_DECAY: 1e-5
+  WARMUP_EPOCHS: 1.0
+  WARMUP_START_LR: 0.00001
+  OPTIMIZING_METHOD: adam
+MODEL:
+  NUM_CLASSES: 16
+  ARCH: x3d
+  MODEL_NAME: X3D
+  LOSS_FUNC: cross_entropy
+  DROPOUT_RATE: 0.5
+DATA_LOADER:
+  NUM_WORKERS: 8
+  PIN_MEMORY: True
+NUM_GPUS: 1
+RNG_SEED: 0
+
+WEIGHT:
+  DASHBOARD: ['/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold0/Dashboard/checkpoints/checkpoint_epoch_00018.pyth',
+              '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold1/Dashboard/checkpoints/checkpoint_epoch_00018.pyth',
+              '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold2/Dashboard/checkpoints/checkpoint_epoch_00018.pyth',
+              '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold3/Dashboard/checkpoints/checkpoint_epoch_00018.pyth',
+              '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold4/Dashboard/checkpoints/checkpoint_epoch_00018.pyth']  
+  REARVIEW: ['/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold0/Rearview/checkpoints/checkpoint_epoch_00018.pyth',
+              '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold1/Rearview/checkpoints/checkpoint_epoch_00018.pyth',
+              '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold2/Rearview/checkpoints/checkpoint_epoch_00018.pyth',
+              '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold3/Rearview/checkpoints/checkpoint_epoch_00018.pyth',
+              '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold4/Rearview/checkpoints/checkpoint_epoch_00018.pyth']
+  RIGHT_SIDE_WINDOW: ['/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold0/Right_side_window/checkpoints/checkpoint_epoch_00018.pyth',
+                      '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold1/Right_side_window/checkpoints/checkpoint_epoch_00018.pyth',
+                      '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold2/Right_side_window/checkpoints/checkpoint_epoch_00018.pyth',
+                      '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold3/Right_side_window/checkpoints/checkpoint_epoch_00018.pyth',
+                      '/workspace/AICity2023/PySlowFast_X3D/checkpoint/28_02_1s/fold4/Right_side_window/checkpoints/checkpoint_epoch_00018.pyth']
